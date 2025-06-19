@@ -131,13 +131,7 @@ pyphen==0.17.2
 pypiwin32==223
 PyRect==0.2.0
 PyScreeze==1.0.1
-python-dateutil==2.9.0.post0
-pytrends==4.9.2
-pyttsx3==2.98
-pytweening==1.2.0
 pytz==2025.1
-pyvista==0.45.2
-pywin32==310
 PyYAML==6.0.2
 referencing==0.36.2
 regex==2024.11.6
