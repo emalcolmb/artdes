@@ -55,6 +55,13 @@ st.markdown("""
         border-left: 4px solid #2196F3;
         margin: 0.5rem 0;
     }
+    .learning-objective {
+        background-color: #f3e5f5;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid #9c27b0;
+        margin: 0.5rem 0;
+    }
     .technique-card {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
@@ -74,6 +81,13 @@ st.markdown("""
         padding: 1rem;
         border-radius: 8px;
         border-left: 4px solid #ff9800;
+        margin: 1rem 0;
+    }
+    .course-info {
+        background-color: #e8f5e8;
+        padding: 1.5rem;
+        border-radius: 10px;
+        border-left: 5px solid #4caf50;
         margin: 1rem 0;
     }
     .stButton > button {
@@ -173,56 +187,80 @@ def generate_artistic_prompt():
     Structure your response with clear sections but maintain a flowing, narrative style throughout.
     """
 
-def generate_photoshop_suggestions(analysis_text, image_analysis_type="general"):
-    """Generate specific Photoshop editing suggestions based on image analysis"""
+def generate_photoshop_suggestions(analysis_text, learning_objective="both"):
+    """Generate specific Photoshop editing suggestions targeting ART250 learning objectives"""
+    
+    # Define the two hardcoded learning objectives
+    raster_objective = """Applies the elements and principles of design in a finished digital image to produce a raster-based digital artwork that utilizes non-destructive editing, layers and layer masks to combine elements from three separate visual images."""
+    
+    vector_objective = """Applies the elements and principles of design in a finished digital image, to produce a vector-based digital project designing a decorative letterforms alphabet, crafted with precise vector shapes, utilizing the pen tool "suite" of tools."""
+    
+    if learning_objective == "raster":
+        target_objective = raster_objective
+        focus_area = "raster-based digital artwork with non-destructive editing"
+    elif learning_objective == "vector":
+        target_objective = vector_objective
+        focus_area = "vector-based digital artwork with precise shapes"
+    else:
+        target_objective = f"{raster_objective}\n\nOR\n\n{vector_objective}"
+        focus_area = "both raster and vector-based digital artwork"
     
     photoshop_prompt = f"""
-    Based on this art analysis, provide specific Adobe Photoshop editing suggestions that would help a digital art student learn key concepts from ART250 (Introduction to Digital Art).
+    Based on this art analysis, provide specific Adobe Photoshop editing tutorials that directly support this ART250 learning objective:
 
-    Original Analysis:
+    **TARGET LEARNING OBJECTIVE:**
+    {target_objective}
+
+    **Original Image Analysis:**
     {analysis_text}
 
-    Please provide:
+    Create tutorials that help students apply elements and principles of design while learning {focus_area}. Structure your response as follows:
 
-    1. **Layer-Based Edits** (3-4 specific techniques):
-       - Non-destructive editing approaches
-       - Layer mask applications
-       - Blending mode suggestions
+    1. **Learning Objective Connection** (1-2 sentences):
+       - Explicitly state how these tutorials support the ART250 learning objective
 
-    2. **Color Theory Applications** (2-3 techniques):
-       - Color balance adjustments
-       - Selective color modifications
-       - Additive vs subtractive color concepts
+    2. **Non-Destructive Raster Techniques** (4-5 specific tutorials):
+       - Layer-based editing approaches that preserve original image data
+       - Layer mask applications for combining multiple visual elements
+       - Adjustment layer techniques for color and tone
+       - Smart object workflows
+       - Each tutorial should include: Tool/Menu path, Step-by-step instructions, Design principle application
 
-    3. **Composition Enhancements** (2-3 techniques):
-       - Rule of thirds applications
-       - Leading lines or focal point adjustments
-       - Cropping or framing suggestions
+    3. **Vector-Based Techniques** (3-4 specific tutorials):
+       - Pen tool applications for precise shape creation
+       - Vector shape design principles
+       - Typography and letterform creation
+       - Path manipulation techniques
+       - Each tutorial should include: Tool/Menu path, Step-by-step instructions, Design principle application
 
-    4. **Creative Remixing Ideas** (3-4 concepts):
-       - Style transfer concepts
-       - Texture overlay ideas
-       - Creative filter combinations
+    4. **Design Elements & Principles Integration** (3-4 applications):
+       - How to apply specific design principles (balance, contrast, emphasis, etc.)
+       - Color theory applications
+       - Composition enhancement techniques
+       - Visual hierarchy creation
 
-    5. **Digital Art Learning Exercises** (2-3 activities):
-       - Specific tools to practice with
-       - Design principle applications
-       - File format and export considerations
+    5. **Hands-On Project Suggestions** (2-3 projects):
+       - Specific projects that combine multiple images using the analyzed artwork as inspiration
+       - Vector letterform design projects inspired by the artwork's style
+       - Assessment criteria aligned with learning objectives
 
-    Format each suggestion with:
-    - Clear step-by-step instructions
-    - Specific Photoshop tools/menus to use
-    - Learning objective explanation
-    - Difficulty level (Beginner/Intermediate/Advanced)
+    Format each tutorial with:
+    - **Tutorial Title**
+    - **Learning Objective Alignment**: (Raster/Vector/Both)
+    - **Difficulty**: Beginner/Intermediate/Advanced
+    - **Tools Required**: Specific Photoshop tools/panels
+    - **Step-by-Step Process**: Numbered instructions
+    - **Design Principle Focus**: Which element/principle of design this reinforces
+    - **Assessment Checkpoint**: How to evaluate success
 
-    Keep suggestions practical and educational, focusing on techniques that reinforce digital art fundamentals.
+    Make tutorials practical, educational, and directly tied to demonstrating competency in the ART250 learning objectives.
     """
     
     try:
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[{"role": "user", "content": photoshop_prompt}],
-            max_tokens=1500,
+            max_tokens=2000,
             temperature=0.7
         )
         return response.choices[0].message.content
@@ -568,6 +606,23 @@ def main():
     # Header
     st.markdown('<h1 class="main-header">🎨 Voice-Based Art Describer</h1>', unsafe_allow_html=True)
     
+    # Course Information Section
+    st.markdown("""
+    <div class="course-info">
+        <h3>📚 ART250: Introduction to Digital Art</h3>
+        <p>This application supports digital art education by providing AI-powered image analysis and Adobe Photoshop tutorials 
+        specifically designed to help students meet ART250 learning objectives. The tool focuses on both raster-based digital artwork 
+        using non-destructive editing techniques and vector-based design projects.</p>
+        
+        <p><strong>🔗 Course Resources:</strong> 
+        <a href="https://laccd.elumenapp.com/public/courses/course-cor/27398" target="_blank">
+        View Official ART250 Course Outline of Record</a></p>
+        
+        <p><strong>Key Learning Focus:</strong> Elements and principles of design, layer techniques, non-destructive editing, 
+        and vector-based design using precise pen tool workflows.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.markdown("""
     <div style="text-align: center; margin-bottom: 2rem;">
         <p style="font-size: 1.2rem; color: #666;">
@@ -612,14 +667,23 @@ def main():
         index=1
     )
     
-    # New: Photoshop Tools Toggle
+    # New: Learning Objective Focus
     st.sidebar.markdown("---")
+    st.sidebar.header("🎯 ART250 Learning Objectives")
+    
+    learning_objective_focus = st.sidebar.selectbox(
+        "Tutorial Focus:",
+        ["Both Objectives", "Raster-Based Digital Art", "Vector-Based Design"],
+        help="Choose which ART250 learning objective to emphasize in Photoshop tutorials"
+    )
+    
+    # Digital Art Tools Toggle
     st.sidebar.header("🛠️ Digital Art Tools")
     
     show_photoshop_tools = st.sidebar.checkbox(
-        "Enable Photoshop Suggestions",
+        "Enable Photoshop Tutorials",
         value=True,
-        help="Show interactive editing suggestions and tools"
+        help="Show educational tutorials aligned with ART250 learning objectives"
     )
     
     show_composition_guides = st.sidebar.checkbox(
@@ -685,6 +749,29 @@ def main():
         else:
             st.info("🎭 **Deep Artistic Critique**: In-depth scholarly analysis with historical context, symbolism, and artistic significance.")
         
+        # Learning objective information
+        if learning_objective_focus == "Raster-Based Digital Art":
+            st.markdown("""
+            <div class="learning-objective">
+            <strong>🎯 Raster Focus:</strong> Tutorials will emphasize non-destructive editing, layers, and layer masks 
+            for combining elements from multiple images.
+            </div>
+            """, unsafe_allow_html=True)
+        elif learning_objective_focus == "Vector-Based Design":
+            st.markdown("""
+            <div class="learning-objective">
+            <strong>🎯 Vector Focus:</strong> Tutorials will emphasize pen tool techniques, precise vector shapes, 
+            and decorative letterform design.
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            st.markdown("""
+            <div class="learning-objective">
+            <strong>🎯 Comprehensive Focus:</strong> Tutorials will cover both raster and vector techniques 
+            to support all ART250 learning objectives.
+            </div>
+            """, unsafe_allow_html=True)
+        
         # Analysis button
         if uploaded_file is not None:
             if st.button("🔍 Analyze Image", use_container_width=True):
@@ -723,6 +810,7 @@ def main():
                         st.session_state.current_analysis = analysis
                         st.session_state.current_image = image
                         st.session_state.selected_voice = voice_options[selected_voice]
+                        st.session_state.learning_objective = learning_objective_focus
                         
                         # Automatically generate audio after analysis
                         with st.spinner("Generating audio narration..."):
@@ -833,50 +921,18 @@ def main():
                             if filter_name in ps_equivalent:
                                 st.caption(f"📝 PS: {ps_equivalent[filter_name]}")
     
-    # Display results
+    # Display analysis results (without the full text section for voice-over)
     if 'current_analysis' in st.session_state:
         st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
-        st.header("🎨 Analysis Results")
+        st.header("🎨 Analysis Summary")
         
-        # Display the analysis with character count
+        # Just show a brief summary instead of the full analysis text
+        st.write("✅ **Image analysis completed successfully!** The detailed analysis has been processed and is available in the audio narration below.")
+        
+        # Show analysis length info
         analysis_length = len(st.session_state.current_analysis)
-        st.markdown(f'<p class="compact-info">📝 Analysis: {analysis_length:,} characters</p>', 
+        st.markdown(f'<p class="compact-info">📝 Analysis: {analysis_length:,} characters generated</p>', 
                    unsafe_allow_html=True)
-        
-        st.markdown(f'<div class="description-box">{st.session_state.current_analysis}</div>', 
-                   unsafe_allow_html=True)
-        
-        # Photoshop Suggestions Section
-        if show_photoshop_tools:
-            st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
-            st.header("🛠️ Adobe Photoshop Editing Suggestions")
-            
-            if st.button("Generate Photoshop Tutorials"):
-                with st.spinner("Creating personalized Photoshop suggestions..."):
-                    ps_suggestions = generate_photoshop_suggestions(st.session_state.current_analysis)
-                    
-                    if ps_suggestions:
-                        st.markdown(ps_suggestions)
-                    else:
-                        # Fallback suggestions
-                        st.markdown("""
-                        ### 🎨 Suggested Photoshop Techniques
-                        
-                        #### **Layer-Based Edits**
-                        1. **Add Adjustment Layers**: Use Layer → New Adjustment Layer → Curves for non-destructive brightness/contrast control
-                        2. **Layer Masks**: Create selections and add layer masks to blend elements seamlessly
-                        3. **Blending Modes**: Experiment with Multiply, Screen, and Overlay for creative effects
-                        
-                        #### **Color Theory Applications**
-                        1. **Color Balance**: Image → Adjustments → Color Balance to shift color temperature
-                        2. **Selective Color**: Target specific color ranges for precise adjustments
-                        3. **Gradient Maps**: Use gradient maps to create stylized color schemes
-                        
-                        #### **Creative Remixing Ideas**
-                        1. **Texture Overlays**: Add paper or canvas textures using Overlay blending mode
-                        2. **Filter Combinations**: Combine multiple filters for unique artistic effects
-                        3. **Double Exposure**: Use layer masks to create multiple exposure effects
-                        """)
         
         # Audio section
         if 'audio_data' in st.session_state:
@@ -898,12 +954,112 @@ def main():
                     mime="audio/mpeg",
                     use_container_width=True
                 )
+        
+        # ART250 Photoshop Tutorials Section
+        if show_photoshop_tools:
+            st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
+            st.header("🛠️ ART250 Adobe Photoshop Tutorials")
+            
+            # Map learning objective selection to function parameter
+            objective_mapping = {
+                "Raster-Based Digital Art": "raster",
+                "Vector-Based Design": "vector", 
+                "Both Objectives": "both"
+            }
+            
+            selected_objective = objective_mapping.get(st.session_state.get('learning_objective', 'Both Objectives'), 'both')
+            
+            if st.button("Generate ART250-Aligned Photoshop Tutorials"):
+                with st.spinner("Creating personalized Photoshop tutorials aligned with ART250 learning objectives..."):
+                    ps_suggestions = generate_photoshop_suggestions(
+                        st.session_state.current_analysis,
+                        learning_objective=selected_objective
+                    )
+                    
+                    if ps_suggestions:
+                        st.markdown(ps_suggestions)
+                    else:
+                        # Enhanced fallback suggestions aligned with ART250
+                        st.markdown(f"""
+                        ### 🎯 ART250-Aligned Photoshop Techniques
+                        
+                        **Learning Objective Connection:** These tutorials support the ART250 learning objectives by teaching students to apply design elements and principles through both raster-based non-destructive editing and vector-based precise shape creation.
+                        
+                        #### **Non-Destructive Raster Techniques** 
+                        
+                        **1. Layer Mask Combination Project**
+                        - **Learning Objective Alignment**: Raster
+                        - **Difficulty**: Intermediate
+                        - **Tools Required**: Layer Panel, Layer Mask, Brush Tool
+                        - **Step-by-Step Process**:
+                          1. Open three separate visual images
+                          2. Create new document (File → New)
+                          3. Drag each image into document as separate layers
+                          4. Add layer masks (Layer → Layer Mask → Add Layer Mask)
+                          5. Use soft brush (B) to blend elements seamlessly
+                          6. Apply design principle of balance by distributing visual weight
+                        - **Design Principle Focus**: Balance and Unity
+                        - **Assessment Checkpoint**: Successfully combined three images with smooth transitions
+                        
+                        **2. Smart Object Workflow**
+                        - **Learning Objective Alignment**: Raster
+                        - **Difficulty**: Advanced
+                        - **Tools Required**: Smart Objects, Adjustment Layers
+                        - **Step-by-Step Process**:
+                          1. Convert layers to Smart Objects (Right-click → Convert to Smart Object)
+                          2. Apply filters non-destructively
+                          3. Add Adjustment Layers above Smart Objects
+                          4. Use layer masks for selective editing
+                        - **Design Principle Focus**: Contrast and Emphasis
+                        - **Assessment Checkpoint**: Edits remain reversible and non-destructive
+                        
+                        #### **Vector-Based Techniques**
+                        
+                        **1. Decorative Letterform Creation**
+                        - **Learning Objective Alignment**: Vector
+                        - **Difficulty**: Intermediate
+                        - **Tools Required**: Pen Tool (P), Shape Tools, Type Tool
+                        - **Step-by-Step Process**:
+                          1. Create new document
+                          2. Use Pen Tool to create precise letter outlines
+                          3. Apply Path Operations (Window → Pathfinder) 
+                          4. Add decorative elements with shape tools
+                          5. Ensure vector scalability
+                        - **Design Principle Focus**: Proportion and Rhythm
+                        - **Assessment Checkpoint**: Letters are scalable vector shapes with precise curves
+                        
+                        **2. Pen Tool Suite Mastery**
+                        - **Learning Objective Alignment**: Vector  
+                        - **Difficulty**: Beginner to Advanced
+                        - **Tools Required**: Pen Tool, Direct Selection Tool, Convert Point Tool
+                        - **Step-by-Step Process**:
+                          1. Practice anchor point placement
+                          2. Master curve creation with direction handles
+                          3. Use Convert Point Tool to adjust curve types
+                          4. Create complex shapes through path combination
+                        - **Design Principle Focus**: Movement and Direction
+                        - **Assessment Checkpoint**: Smooth, precise vector paths with proper curve flow
+                        
+                        #### **Design Elements & Principles Integration**
+                        
+                        **1. Visual Hierarchy Project**
+                        - Apply contrast through scale, color, and position
+                        - Use typography and imagery to guide viewer's eye
+                        - Implement focal points using design principles
+                        
+                        **2. Color Theory Application**
+                        - Use Color Picker and Adjustment Layers
+                        - Apply complementary color schemes
+                        - Create mood through color temperature
+                        
+                        **Reference:** [ART250 Course Outline](https://laccd.elumenapp.com/public/courses/course-cor/27398)
+                        """)
 
     # Minimal footer
     st.markdown('<div class="section-divider"></div>', unsafe_allow_html=True)
     st.markdown("""
     <div style="text-align: center; color: #999; font-size: 0.9rem;">
-        <strong>Voice-Based Art Describer</strong> • Making visual art accessible through AI
+        <strong>Voice-Based Art Describer</strong> • Supporting ART250 Digital Art Education • Making visual art accessible through AI
     </div>
     """, unsafe_allow_html=True)
 
