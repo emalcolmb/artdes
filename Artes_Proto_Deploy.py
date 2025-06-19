@@ -606,22 +606,16 @@ def main():
     # Header
     st.markdown('<h1 class="main-header">🎨 Voice-Based Art Describer</h1>', unsafe_allow_html=True)
     
-    # Course Information Section
-    st.markdown("""
-    <div class="course-info">
-        <h3>📚 ART250: Introduction to Digital Art</h3>
-        <p>This application supports digital art education by providing AI-powered image analysis and Adobe Photoshop tutorials 
-        specifically designed to help students meet ART250 learning objectives. The tool focuses on both raster-based digital artwork 
-        using non-destructive editing techniques and vector-based design projects.</p>
-        
-        <p><strong>🔗 Course Resources:</strong> 
-        <a href="https://laccd.elumenapp.com/public/courses/course-cor/27398" target="_blank">
-        View Official ART250 Course Outline of Record</a></p>
-        
-        <p><strong>Key Learning Focus:</strong> Elements and principles of design, layer techniques, non-destructive editing, 
-        and vector-based design using precise pen tool workflows.</p>
-    </div>
-    """, unsafe_allow_html=True)
+    # Course Information Section - Simplified
+    st.write("## 📚 ART250: Introduction to Digital Art")
+    
+    st.write("""This application supports digital art education by providing AI-powered image analysis and Adobe Photoshop tutorials 
+    specifically designed to help students meet ART250 learning objectives. The tool focuses on both raster-based digital artwork 
+    using non-destructive editing techniques and vector-based design projects.""")
+    
+    st.write("**🔗 Course Resources:** [View Official ART250 Course Outline of Record](https://laccd.elumenapp.com/public/courses/course-cor/27398)")
+    
+    st.write("**Key Learning Focus:** Elements and principles of design, layer techniques, non-destructive editing, and vector-based design using precise pen tool workflows.")
     
     st.markdown("""
     <div style="text-align: center; margin-bottom: 2rem;">
